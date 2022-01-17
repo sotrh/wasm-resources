@@ -1,0 +1,75 @@
+wasm-resources v0.1.0 (/home/ben/code/wasm-resources)
+├── anyhow v1.0.52
+├── cfg-if v1.0.0
+├── console_error_panic_hook v0.1.7
+│   ├── cfg-if v1.0.0
+│   └── wasm-bindgen v0.2.78
+│       ├── cfg-if v1.0.0
+│       └── wasm-bindgen-macro v0.2.78 (proc-macro)
+│           ├── quote v1.0.14
+│           │   └── proc-macro2 v1.0.36
+│           │       └── unicode-xid v0.2.2
+│           └── wasm-bindgen-macro-support v0.2.78
+│               ├── proc-macro2 v1.0.36 (*)
+│               ├── quote v1.0.14 (*)
+│               ├── syn v1.0.85
+│               │   ├── proc-macro2 v1.0.36 (*)
+│               │   ├── quote v1.0.14 (*)
+│               │   └── unicode-xid v0.2.2
+│               ├── wasm-bindgen-backend v0.2.78
+│               │   ├── bumpalo v3.9.1
+│               │   ├── lazy_static v1.4.0
+│               │   ├── log v0.4.14
+│               │   │   └── cfg-if v1.0.0
+│               │   ├── proc-macro2 v1.0.36 (*)
+│               │   ├── quote v1.0.14 (*)
+│               │   ├── syn v1.0.85 (*)
+│               │   └── wasm-bindgen-shared v0.2.78
+│               └── wasm-bindgen-shared v0.2.78
+├── console_log v0.2.0
+│   ├── log v0.4.14
+│   │   └── cfg-if v1.0.0
+│   └── web-sys v0.3.55
+│       ├── js-sys v0.3.55
+│       │   └── wasm-bindgen v0.2.78 (*)
+│       └── wasm-bindgen v0.2.78 (*)
+├── lazy_static v1.4.0
+├── log v0.4.14 (*)
+├── pollster v0.2.4
+├── reqwest v0.11.9
+│   ├── bytes v1.1.0
+│   ├── http v0.2.6
+│   │   ├── bytes v1.1.0
+│   │   ├── fnv v1.0.7
+│   │   └── itoa v1.0.1
+│   ├── js-sys v0.3.55 (*)
+│   ├── serde v1.0.133
+│   ├── serde_json v1.0.74
+│   │   ├── itoa v1.0.1
+│   │   ├── ryu v1.0.9
+│   │   └── serde v1.0.133
+│   ├── serde_urlencoded v0.7.0
+│   │   ├── form_urlencoded v1.0.1
+│   │   │   ├── matches v0.1.9
+│   │   │   └── percent-encoding v2.1.0
+│   │   ├── itoa v0.4.8
+│   │   ├── ryu v1.0.9
+│   │   └── serde v1.0.133
+│   ├── url v2.2.2
+│   │   ├── form_urlencoded v1.0.1 (*)
+│   │   ├── idna v0.2.3
+│   │   │   ├── matches v0.1.9
+│   │   │   ├── unicode-bidi v0.3.7
+│   │   │   └── unicode-normalization v0.1.19
+│   │   │       └── tinyvec v1.5.1
+│   │   │           └── tinyvec_macros v0.1.0
+│   │   ├── matches v0.1.9
+│   │   └── percent-encoding v2.1.0
+│   ├── wasm-bindgen v0.2.78 (*)
+│   ├── wasm-bindgen-futures v0.4.28
+│   │   ├── cfg-if v1.0.0
+│   │   ├── js-sys v0.3.55 (*)
+│   │   └── wasm-bindgen v0.2.78 (*)
+│   └── web-sys v0.3.55 (*)
+├── wasm-bindgen v0.2.78 (*)
+└── wasm-bindgen-futures v0.4.28 (*)
