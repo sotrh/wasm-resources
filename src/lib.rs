@@ -6,7 +6,7 @@ cfg_if::cfg_if! {
         lazy_static::lazy_static! {
             // TODO: make the url/port configurable
             static ref BASE_URL: reqwest::Url = {
-                "http://0.0.0.0:8000/res/".parse().unwrap()
+                "http://127.0.0.1:8000/res/".parse().unwrap()
             };
         }
     } else {
