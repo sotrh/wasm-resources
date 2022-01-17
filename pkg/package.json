@@ -1,0 +1,12 @@
+{
+  "name": "wasm-resources",
+  "version": "0.1.0",
+  "files": [
+    "wasm_resources_bg.wasm",
+    "wasm_resources.js",
+    "wasm_resources.d.ts"
+  ],
+  "module": "wasm_resources.js",
+  "types": "wasm_resources.d.ts",
+  "sideEffects": false
+}
