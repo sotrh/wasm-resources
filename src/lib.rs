@@ -18,14 +18,6 @@ cfg_if::cfg_if! {
     }
 }
 
-
-// #[cfg(not(target_arch="wasm32"))]
-// lazy_static::lazy_static!{
-//     static ref BASE_PATH: std::path::PathBuf = {
-//         std::path::PathBuf::from(format!("{}/res", std::env::current_dir().unwrap().as_os_str().to_str().unwrap()))
-//     };
-// }
-
 pub async fn fetch_text_file(res_name: &str) -> anyhow::Result<String> {
     cfg_if::cfg_if! {
         if #[cfg(target_arch="wasm32")] {
@@ -47,6 +39,6 @@ pub async fn start() {
     std::panic::set_hook(Box::new(console_error_panic_hook::hook));
 
     // Not the most useful demo, but it gets the point across
-    let text = fetch_text_file("data.json").await.unwrap();
-    log::info!("Contents of 'data.json':\n\n{}", text);
+    let text = fetch_text_file("wasm-tree.txt").await.unwrap();
+    log::info!("Contents of 'wasm-tree.txt':\n\n{}", text);
 }

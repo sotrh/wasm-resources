@@ -14,8 +14,10 @@ log = "0.4"
 pollster = "0.2"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-console_error_panic_hook = "0.1"
-console_log = "0.2"
 reqwest = "0.11"
 wasm-bindgen = "0.2"
-wasm-bindgen-futures = "0.4" # Needed for wasm_bindgen(start)
+# Needed for async wasm_bindgen(start)
+wasm-bindgen-futures = "0.4"
+# These are only to make debugging easier
+console_error_panic_hook = "0.1"
+console_log = "0.2"
