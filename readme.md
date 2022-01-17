@@ -53,6 +53,9 @@ edition = "2021"
 [lib]
 crate-type = ["cdylib", "rlib"]
 
+[features]
+gh_pages = []
+
 [dependencies]
 anyhow = "1"
 cfg-if = "1"
@@ -83,9 +86,15 @@ use wasm_bindgen::prelude::*;
 cfg_if::cfg_if! {
     if #[cfg(target_arch="wasm32")] {
         lazy_static::lazy_static! {
-            // TODO: make the url/port configurable
             static ref BASE_URL: reqwest::Url = {
-                "http://0.0.0.0:8000/res/".parse().unwrap()
+                // TODO: is there a better way to do this?
+                cfg_if::cfg_if!{
+                    if #[cfg(feature="gh_pages")] {
+                        "https://sotrh.github.io/wasm-resources/res/".parse().unwrap()
+                    } else {
+                        "http://127.0.0.1:8000/res/".parse().unwrap()
+                    }
+                }
             };
         }
     } else {

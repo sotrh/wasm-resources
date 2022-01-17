@@ -6,6 +6,9 @@ edition = "2021"
 [lib]
 crate-type = ["cdylib", "rlib"]
 
+[features]
+gh_pages = []
+
 [dependencies]
 anyhow = "1"
 cfg-if = "1"
