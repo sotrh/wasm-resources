@@ -1,4 +1,10 @@
-#[cfg(target_arch="wasm32")]
+use std::{
+    any,
+    io::{BufReader, Cursor},
+};
+
+use anyhow::Context;
+#[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
 
 cfg_if::cfg_if! {
@@ -10,7 +16,7 @@ cfg_if::cfg_if! {
                     if #[cfg(feature="gh_pages")] {
                         "https://sotrh.github.io/wasm-resources/res/".parse().unwrap()
                     } else {
-                        "http://127.0.0.1:8000/res/".parse().unwrap()
+                        "http://127.0.0.1:3000/res/".parse().unwrap()
                     }
                 }
             };
@@ -38,8 +44,86 @@ pub async fn fetch_text_file(res_name: &str) -> anyhow::Result<String> {
     Ok(text)
 }
 
-#[cfg(target_arch="wasm32")]
-#[cfg_attr(target_arch="wasm32", wasm_bindgen(start))]
+pub async fn fetch_binary_file(res_name: &str) -> anyhow::Result<Vec<u8>> {
+    cfg_if::cfg_if! {
+        if #[cfg(target_arch="wasm32")] {
+            let url = BASE_URL.join(res_name)?;
+            let res = reqwest::get(url).await?;
+            let data = res.bytes().await?.to_vec();
+        } else {
+            let path = BASE_PATH.join(res_name);
+            let data = std::fs::read(path)?;
+        }
+    }
+    Ok(data)
+}
+
+pub async fn fetch_glb(res_name: &str) -> anyhow::Result<gltf::Gltf> {
+    let data = fetch_binary_file(res_name).await?;
+    let glb = gltf::Gltf::from_slice(&data)?;
+    Ok(glb)
+}
+
+pub async fn fetch_obj(res_name: &str) -> anyhow::Result<(Vec<tobj::Model>, Vec<tobj::Material>)> {
+    let obj_text = fetch_text_file(res_name).await?;
+    let mut obj_reader = BufReader::new(Cursor::new(obj_text));
+    let (models, materials) = tobj::load_obj_buf_async(
+        &mut obj_reader,
+        &tobj::LoadOptions {
+            triangulate: true,
+            single_index: true,
+            ..Default::default()
+        },
+        |p| async move {
+            let mtl_text = fetch_text_file(&p).await.unwrap();
+            tobj::load_mtl_buf(&mut BufReader::new(Cursor::new(mtl_text)))
+        },
+    )
+    .await?;
+
+    Ok((models, materials?))
+}
+
+pub async fn fetch_obj_test(
+    res_name: &str,
+) -> anyhow::Result<(Vec<tobj::Model>, Vec<tobj::Material>)> {
+    let obj_text = fetch_text_file(res_name).await?;
+    let mut obj_reader = BufReader::new(Cursor::new(obj_text));
+    // let mut mtl_paths = Vec::new();
+    let (models, materials) = tobj::load_obj_buf(
+        &mut obj_reader,
+        &tobj::LoadOptions {
+            triangulate: true,
+            single_index: true,
+            ..Default::default()
+        },
+        |p| {
+            let p = p
+                .to_str()
+                .ok_or(tobj::LoadError::OpenFileFailed)?
+                .to_string();
+            // mtl_paths.push(p);
+            log::info!("{}", p);
+            Err(tobj::LoadError::GenericFailure)
+        },
+    )?;
+
+    let materials = materials.unwrap_or(vec![]);
+
+    // let materials = mtl_paths.into_iter().map(|p| {
+    //     let mtl_text = pollster::block_on(fetch_text_file(&p))?;
+    //     let (mtl, _) = tobj::load_mtl_buf(&mut BufReader::new(Cursor::new(mtl_text)))?;
+    //     Ok(mtl)
+    // }).collect::<anyhow::Result<Vec<_>>>()?
+    // .into_iter()
+    // .flatten()
+    // .collect::<Vec<_>>();
+
+    Ok((models, materials))
+}
+
+#[cfg(target_arch = "wasm32")]
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen(start))]
 pub async fn start() {
     console_log::init_with_level(log::Level::Info).expect("Could't initialize logger");
     std::panic::set_hook(Box::new(console_error_panic_hook::hook));
@@ -47,4 +131,8 @@ pub async fn start() {
     // Not the most useful demo, but it gets the point across
     let text = fetch_text_file("wasm-tree.txt").await.unwrap();
     log::info!("Contents of 'wasm-tree.txt':\n\n{}", text);
+
+    let (models, materials) = fetch_obj_test("cube.obj").await.unwrap();
+    log::info!("Models for 'cube.obj':\n\n{:?}", models);
+    log::info!("Materials for 'cube.obj':\n\n{:?}", materials);
 }
